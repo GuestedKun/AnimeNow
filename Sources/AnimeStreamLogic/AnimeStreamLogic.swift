@@ -93,6 +93,7 @@ public struct AnimeStreamLogic: ReducerProtocol {
         case fetchedProvider(AnimeStreamingProvider)
         case fetchedSources(Loadable<SourcesOptions>)
         case selectSource(Source.ID)
+				case retryEpisodeFetch
     }
 
     public var body: some ReducerProtocol<State, Action> {
@@ -239,6 +240,19 @@ extension AnimeStreamLogic {
             return .run {
                 await userDefaultsClient.set(.videoPlayerSubtitle, value: subtitle)
             }
+
+				case .retryEpisodeFetch:
+						if let provider = state.streamingProvider {
+								state.sourceOptions = .idle
+								state.streamingProviders[provider.id] = .idle
+								let animeId = state.animeId
+								return .concatenate(
+										.run{
+												await animeClient.invalidateAnimeProvider(animeId, provider.name)
+										},
+										fetchStreamingProvider(&state)
+								)
+						}
 
         case .destroy:
             return .merge(

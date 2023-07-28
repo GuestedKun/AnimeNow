@@ -216,7 +216,9 @@ public extension AnimeClient {
                     .listProviders(of: .ANIME)
                 )
             )
-        }
+				} invalidateAnimeProvider: { animeId, providerName in
+						cachedStreamingProviders.removeValue(forKey: "\(animeId)-\(providerName)")
+				}
     }()
 }
 

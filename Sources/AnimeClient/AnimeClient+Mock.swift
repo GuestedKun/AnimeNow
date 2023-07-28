@@ -35,5 +35,5 @@ public extension AnimeClient {
         .init()
     } getAnimeProviders: {
         []
-    }
+		} invalidateAnimeProvider: { _, _ in }
 }

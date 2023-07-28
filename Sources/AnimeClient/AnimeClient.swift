@@ -26,6 +26,7 @@ public struct AnimeClient {
     public let getSources: @Sendable (String, EpisodeLink) async throws -> SourcesOptions
     public let getSkipTimes: @Sendable (Int, Int) async throws -> [SkipTime]
     public let getAnimeProviders: @Sendable () async throws -> [ProviderInfo]
+    public let invalidateAnimeProvider: @Sendable (Anime.ID, String) async -> Void
 }
 
 // MARK: AnimeClient.Error

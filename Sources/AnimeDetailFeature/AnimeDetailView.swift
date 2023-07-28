@@ -615,9 +615,21 @@ extension AnimeDetailView {
                             viewState.compact
                         )
                     } else {
-                        Text("No episodes available from this provider.")
-                            .padding()
-                            .frame(height: 100)
+												VStack {
+														Text("No episodes available from this provider.")
+																.padding()
+														Button(action: {
+																viewState.send(.stream(.retryEpisodeFetch))
+														}) {
+																Label("Retry", systemImage: "arrow.clockwise")
+														}
+														.buttonStyle(.plain)
+														.padding(.horizontal)
+														.padding(.vertical, 10)
+														.background(Color.gray.opacity(0.25))
+														.clipShape(Capsule())
+												}
+												.frame(height: 150)
                     }
                 } failedView: {
                     Text("There was an error retrieving episodes from this provider.")
