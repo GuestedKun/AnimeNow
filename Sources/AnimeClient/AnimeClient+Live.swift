@@ -149,7 +149,7 @@ public extension AnimeClient {
             async let sub = try? await apiClient.request(
                 .consumet(
                     .anilistEpisodes(
-												hostname: hostname,
+                        hostname: hostname,
                         animeId: animeId,
                         dub: false,
                         provider: provider.name
@@ -160,7 +160,7 @@ public extension AnimeClient {
             async let dub = try? await apiClient.request(
                 .consumet(
                     .anilistEpisodes(
-												hostname: hostname,
+                        hostname: hostname,
                         animeId: animeId,
                         dub: true,
                         provider: provider.name
@@ -168,12 +168,12 @@ public extension AnimeClient {
                 )
             )
 
-            var providerData = AnimeStreamingProvider(
+            var providerData = await AnimeStreamingProvider(
                 name: provider.name,
                 logo: provider.logo,
                 episodes: mergeSources(
-                    await sub ?? .init(),
-                    await dub ?? .init()
+                    sub ?? .init(),
+                    dub ?? .init()
                 )
             )
 
@@ -186,7 +186,7 @@ public extension AnimeClient {
                 let response = try await apiClient.request(
                     .consumet(
                         .anilistWatch(
-														hostname: hostname,
+                            hostname: hostname,
                             episodeId: id,
                             dub: audio.isDub,
                             provider: provider
@@ -219,9 +219,9 @@ public extension AnimeClient {
                     .listProviders(hostname: hostname, of: .ANIME)
                 )
             )
-				} invalidateAnimeProvider: { animeId, providerName in
-						cachedStreamingProviders.removeValue(forKey: "\(animeId)-\(providerName)")
-				}
+        } invalidateAnimeProvider: { animeId, providerName in
+            cachedStreamingProviders.removeValue(forKey: "\(animeId)-\(providerName)")
+        }
     }()
 }
 

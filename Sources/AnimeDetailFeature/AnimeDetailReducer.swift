@@ -31,7 +31,7 @@ public struct AnimeDetailReducer: ReducerProtocol {
         public var episodesDescendingOrder = true
 
         public init(
-						hostname: URL,
+            hostname: URL,
             animeId: Anime.ID,
             anime: Loadable<Anime> = .idle,
             availableProviders: Selectable<ProviderInfo>
@@ -39,7 +39,7 @@ public struct AnimeDetailReducer: ReducerProtocol {
             self.animeId = animeId
             self.anime = anime
             self.stream = .init(
-								hostname: hostname,
+                hostname: hostname,
                 animeId: animeId,
                 episodeId: -1,
                 availableProviders: availableProviders
@@ -91,18 +91,18 @@ public struct AnimeDetailReducer: ReducerProtocol {
         Scope(state: \.stream, action: /Action.stream) {
             AnimeStreamLogic()
         }
-        Reduce(self.core)
+        Reduce(core)
     }
 }
 
 public extension AnimeDetailReducer.State {
     init(
-				hostname: URL,
+        hostname: URL,
         anime: some AnimeRepresentable,
         availableProviders: Selectable<ProviderInfo>
     ) {
         self.init(
-						hostname: hostname,
+            hostname: hostname,
             animeId: anime.id,
             anime: (anime as? Anime).flatMap { .success($0) } ?? .idle,
             availableProviders: availableProviders
@@ -174,8 +174,8 @@ extension AnimeDetailReducer {
 
             return .run { [animeStore] _ in
                 try await withTaskCancellation(id: FavoritesDebouce.self, cancelInFlight: true) {
-                    if !(
-                        try await databaseClient
+                    if try await !(
+                        databaseClient
                             .update(animeStore.id, \AnimeStore.isFavorite, animeStore.isFavorite)
                     ) {
                         try await databaseClient.insert(animeStore)
@@ -223,7 +223,8 @@ extension AnimeDetailReducer {
 
         case let .markEpisodeAsWatched(episodeNumber):
             guard var animeStore = state.animeStore.value,
-                  let episode = state.episodes.value?[id: episodeNumber] else {
+                  let episode = state.episodes.value?[id: episodeNumber]
+            else {
                 break
             }
 

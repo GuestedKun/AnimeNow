@@ -222,8 +222,8 @@ extension AppReducer {
 
         case .appDelegate(.appDidFinishLaunching):
             state.settings.animeProviders = .loading
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .run { send in
                 await withThrowingTaskGroup(of: Void.self) { group in
                     group.addTask {
@@ -237,7 +237,7 @@ extension AppReducer {
                     group.addTask {
                         await send(
                             .fetchedAnimeProviders(
-																.init { try await apiClient.request(.consumet(.listProviders(hostname: hostname, of: .ANIME))) }
+                                .init { try await apiClient.request(.consumet(.listProviders(hostname: hostname, of: .ANIME))) }
                             )
                         )
                     }
@@ -278,12 +278,12 @@ extension AppReducer {
 
         case let .home(.animeTapped(anime)),
              let .search(.onAnimeTapped(anime)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setAnimeDetail(
                     .init(
-												hostname: hostname,
+                        hostname: hostname,
                         anime: anime,
                         availableProviders: state.settings.selectableAnimeProviders
                     )
@@ -292,12 +292,12 @@ extension AppReducer {
             )
 
         case let .collection(.onAnimeTapped(animeId)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setAnimeDetail(
                     .init(
-												hostname: hostname,
+                        hostname: hostname,
                         animeId: animeId,
                         availableProviders: state.settings.selectableAnimeProviders
                     )
@@ -306,12 +306,12 @@ extension AppReducer {
             )
 
         case let .home(.anyAnimeTapped(animeId)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setAnimeDetail(
                     .init(
-												hostname: hostname,
+                        hostname: hostname,
                         animeId: animeId,
                         availableProviders: state.settings.selectableAnimeProviders
                     )
@@ -320,15 +320,15 @@ extension AppReducer {
             )
 
         case let .home(.watchEpisodeTapped(resumeWatching)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setVideoPlayer(
                     .init(
                         player: videoPlayerClient.player(),
                         anime: resumeWatching.anime.eraseAsRepresentable(),
                         stream: .init(
-														hostname: hostname,
+                            hostname: hostname,
                             animeId: resumeWatching.anime.id,
                             episodeId: resumeWatching.episode.number,
                             availableProviders: state.settings.selectableAnimeProviders
@@ -342,15 +342,15 @@ extension AppReducer {
             )
 
         case let .animeDetail(.play(anime, streamingProvider, selected)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setVideoPlayer(
                     .init(
                         player: videoPlayerClient.player(),
                         anime: anime.eraseAsRepresentable(),
                         stream: .init(
-														hostname: hostname,
+                            hostname: hostname,
                             animeId: anime.id,
                             episodeId: selected,
                             availableProviders: .init(
@@ -368,15 +368,15 @@ extension AppReducer {
             )
 
         case let .downloads(.playEpisode(anime, episodes, selected)):
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setVideoPlayer(
                     .init(
                         player: videoPlayerClient.player(),
                         anime: anime.eraseAsRepresentable(),
                         stream: .init(
-														hostname: hostname,
+                            hostname: hostname,
                             animeId: anime.id,
                             episodeId: selected,
                             availableProviders: .init(
@@ -437,13 +437,13 @@ extension AppReducer {
             else {
                 break
             }
-						let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-						let hostname = URL(string: url).unsafelyUnwrapped
+            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
+            let hostname = URL(string: url).unsafelyUnwrapped
             return .action(
                 .setModalOverlay(
                     .downloadOptions(
                         .init(
-														hostname: hostname,
+                            hostname: hostname,
                             anime: anime,
                             episodeId: episodeId,
                             availableProviders: availableProviders
