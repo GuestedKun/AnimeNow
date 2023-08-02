@@ -828,6 +828,7 @@ struct AnimeDetailView_Previews: PreviewProvider {
         AnimeDetailView(
             store: .init(
                 initialState: .init(
+										hostname: URL(string: "https://api.consumet.org").unsafelyUnwrapped,
                     animeId: 127_230,
                     availableProviders: .init(items: [])
                 ),

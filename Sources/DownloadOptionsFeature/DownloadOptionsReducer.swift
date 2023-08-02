@@ -11,6 +11,7 @@ import ComposableArchitecture
 import DownloaderClient
 import SharedModels
 import Utilities
+import Foundation
 
 // MARK: - DownloadOptionsReducer
 
@@ -22,12 +23,14 @@ public struct DownloadOptionsReducer: ReducerProtocol {
         public var stream: AnimeStreamLogic.State
 
         public init(
+						hostname: URL,
             anime: Anime,
             episodeId: Episode.ID,
             availableProviders: Selectable<ProviderInfo>
         ) {
             self.anime = anime
             self.stream = .init(
+								hostname: hostname,
                 animeId: anime.id,
                 episodeId: episodeId,
                 availableProviders: availableProviders

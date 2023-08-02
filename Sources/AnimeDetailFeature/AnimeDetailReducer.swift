@@ -31,6 +31,7 @@ public struct AnimeDetailReducer: ReducerProtocol {
         public var episodesDescendingOrder = true
 
         public init(
+						hostname: URL,
             animeId: Anime.ID,
             anime: Loadable<Anime> = .idle,
             availableProviders: Selectable<ProviderInfo>
@@ -38,6 +39,7 @@ public struct AnimeDetailReducer: ReducerProtocol {
             self.animeId = animeId
             self.anime = anime
             self.stream = .init(
+								hostname: hostname,
                 animeId: animeId,
                 episodeId: -1,
                 availableProviders: availableProviders
@@ -95,10 +97,12 @@ public struct AnimeDetailReducer: ReducerProtocol {
 
 public extension AnimeDetailReducer.State {
     init(
+				hostname: URL,
         anime: some AnimeRepresentable,
         availableProviders: Selectable<ProviderInfo>
     ) {
         self.init(
+						hostname: hostname,
             animeId: anime.id,
             anime: (anime as? Anime).flatMap { .success($0) } ?? .idle,
             availableProviders: availableProviders

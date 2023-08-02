@@ -11,6 +11,7 @@ import ComposableArchitecture
 import SharedModels
 import UserDefaultsClient
 import Utilities
+import Foundation
 
 // MARK: - AnimeStreamViewState
 
@@ -62,6 +63,7 @@ public struct AnimeStreamLogic: ReducerProtocol {
     public struct State: Equatable {
         public let animeId: Anime.ID
         public var selectedEpisode: Episode.ID
+				public var hostname: URL
 
         public var availableProviders: Selectable<ProviderInfo>
         public var streamingProviders = [AnimeStreamingProvider.ID: Loadable<AnimeStreamingProvider>]()
@@ -71,11 +73,13 @@ public struct AnimeStreamLogic: ReducerProtocol {
         public var selectedSubtitle: SourcesOptions.Subtitle.ID?
 
         public init(
+						hostname: URL,
             animeId: Anime.ID,
             episodeId: Episode.ID,
             availableProviders: Selectable<ProviderInfo>,
             streamingProviders: [AnimeStreamingProvider] = []
         ) {
+            self.hostname = hostname
             self.animeId = animeId
             self.selectedEpisode = episodeId
             self.availableProviders = availableProviders
@@ -268,11 +272,12 @@ extension AnimeStreamLogic {
         if let provider = state.availableProviders.item {
             if (state.streamingProviders[provider.id] ?? .idle) == .idle {
                 let animeId = state.animeId
+                let hostname = state.hostname
                 state.streamingProviders[provider.id] = .loading
                 return .run {
                     await withTaskCancellation(id: FetchProviderCancellable.self) {
                         .fetchedProvider(
-                            await animeClient.getEpisodes(animeId, provider)
+                            await animeClient.getEpisodes(hostname, animeId, provider)
                         )
                     }
                 }
@@ -295,13 +300,14 @@ extension AnimeStreamLogic {
             state.selectedLink = state.selectedLink ?? preferredLink ?? episode.links.first?.id
 
             if let link = state.link {
+								let hostname = state.hostname
                 return .run {
                     await withTaskCancellation(
                         id: FetchSourceOptionsCancellable.self,
                         cancelInFlight: true
                     ) {
                         await .fetchedSources(
-                            .init { try await animeClient.getSources(provider.name, link) }
+                            .init { try await animeClient.getSources(hostname, provider.name, link) }
                         )
                     }
                 }
