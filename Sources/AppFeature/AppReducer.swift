@@ -12,6 +12,7 @@ import AnimeDetailFeature
 import AnimePlayerFeature
 import CollectionsFeature
 import DownloadsFeature
+import FileClient
 import HomeFeature
 import ModalOverlayFeature
 import SearchFeature
@@ -150,6 +151,8 @@ public struct AppReducer: ReducerProtocol {
     var trackingListClient
     @Dependency(\.videoPlayerClient)
     var videoPlayerClient
+    @Dependency(\.fileClient)
+    var fileClient
 
     public var body: some ReducerProtocol<State, Action> {
         Scope(state: \.settings.userSettings, action: /Action.appDelegate) {
@@ -222,9 +225,9 @@ extension AppReducer {
 
         case .appDelegate(.appDidFinishLaunching):
             state.settings.animeProviders = .loading
-            let url = !state.settings.userSettings.hostname.isEmpty ? state.settings.userSettings.hostname : "https://api.consumet.org"
-            let hostname = URL(string: url).unsafelyUnwrapped
             return .run { send in
+                let url = await (try? fileClient.loadUserSettings().hostname) ?? "https://api.consumet.org"
+                let hostname = URL(string: url).unsafelyUnwrapped
                 await withThrowingTaskGroup(of: Void.self) { group in
                     group.addTask {
                         let downloadCounts = downloaderClient.count()

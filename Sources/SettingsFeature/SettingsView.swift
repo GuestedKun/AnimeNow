@@ -175,47 +175,53 @@ extension SettingsView {
 
     @ViewBuilder
     var general: some View {
-        SettingsGroupView {
-            HStack {
-                GroupLabel(title: "Hostname")
-                Link(destination: URL(string: "https://github.com/consumet/api.consumet.org#installation").unsafelyUnwrapped) {
-                    Label("Learn more", systemImage: "link")
-                }
-                .font(.system(size: 13))
-            }
-        } items: {
-            HStack {
-                if self.hostnameLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                } else {
-                    if self.hostnameExists {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(.green)
-                    } else {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.red)
+        ZStack {
+            SettingsGroupView {
+                HStack {
+                    GroupLabel(title: "Hostname")
+                    Link(destination: URL(string: "https://github.com/consumet/api.consumet.org#installation").unsafelyUnwrapped) {
+                        Label("Learn more", systemImage: "link")
                     }
+                    .font(.system(size: 13))
                 }
-                Spacer(minLength: 14.5)
-                TextField(
-                    "Using default hostname",
-                    text: viewStore.binding(get: { $0.userSettings.hostname }, send: {
-                        self.hostnameLoading.toggle()
-                        checkURL(hostname: $0)
-                        return .set(\.$userSettings.hostname, $0)
-                    })
-                )
-                .foregroundColor(.white)
-                .padding(12)
-                .background(Color.white.opacity(0.1))
-                .clipShape(Capsule())
+            } items: {
+                HStack {
+                    if self.hostnameLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                    } else {
+                        if self.hostnameExists {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.green)
+                        } else {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.red)
+                        }
+                    }
+                    Spacer(minLength: 14.5)
+                    TextField(
+                        "Using default hostname",
+                        text: viewStore.binding(get: { $0.userSettings.hostname }, send: {
+                            self.hostnameLoading.toggle()
+                            checkURL(hostname: $0)
+                            return .set(\.$userSettings.hostname, $0)
+                        })
+                    )
+                    .foregroundColor(.white)
+                    .padding(12)
+                    .background(Color.white.opacity(0.1))
+                    .clipShape(Capsule())
+                }
+                .padding(.horizontal, 14.5)
+                .frame(minHeight: 58.0)
+                .font(.callout)
+                .background(Color(white: 0.2))
+                .contentShape(Rectangle())
             }
-            .padding(.horizontal, 14.5)
-            .frame(minHeight: 58.0)
-            .font(.callout)
-            .background(Color(white: 0.2))
-            .contentShape(Rectangle())
+            Text("A restart may be required after a change is made.")
+                .font(.system(size: 12))
+                .opacity(0.6)
+                .offset(y: 65)
         }
         SettingsGroupView(title: "General") {
             SettingsRowView(name: "Provider") {
