@@ -25,7 +25,7 @@ public struct ConsumetEndpoint<D: Decodable>: Endpoint {
         method: Request<D>.Method? = .get,
         headers: [String: CustomStringConvertible]? = nil
     ) {
-        self.base = base ?? URL(string: "https://consumet-api-ckvw.onrender.com").unsafelyUnwrapped
+        self.base = base ?? URL(string: "https://consumetapi.com").unsafelyUnwrapped
         self.path = path
         self.query = query
         self.method = method ?? .get
