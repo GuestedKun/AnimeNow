@@ -12,7 +12,7 @@ import Utilities
 // MARK: - ConsumetEndpoint
 
 public struct ConsumetEndpoint<D: Decodable>: Endpoint {
-    var base = URL(string: "https://api.consumet.org").unsafelyUnwrapped
+    var base = URL(string: "https://consumet-api-ckvw.onrender.com").unsafelyUnwrapped
     var path: [CustomStringConvertible] = []
     var query: [Query] = []
     var method: Request<D>.Method = .get
